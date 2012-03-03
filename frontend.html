@@ -1,0 +1,56 @@
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="src/event_target.js"></script>
+	<script type="text/javascript" src="src/helpers.js"></script>
+	<script type="text/javascript" src="src/mips_error_handler.js"></script>
+	<script type="text/javascript" src="src/symbols_constants.js"></script>
+	<script type="text/javascript" src="src/symbol_table.js"></script>
+	<script type="text/javascript" src="src/opcode_translator.js"></script>
+	<script type="text/javascript" src="src/mips_scanner.js"></script>
+	<script type="text/javascript" src="src/mips_lexer.js"></script>
+	<script type="text/javascript" src="src/mips_parser.js"></script>
+	<script type="text/javascript" src="src/mips_assembler.js"></script>
+	<script type="text/javascript">
+
+		var assembler = new MIPS_Assembler();
+
+
+		function getSource() {
+			var value = document.getElementById('code').value;
+			var sourceArray = value.split("\n");
+
+			return sourceArray.join("\n ")+"\n";
+		}
+
+		function write_out(str) {
+			var el = document.getElementById('output');
+			el.value += str+"\n";
+		}
+
+		function ass() {
+
+			var el = document.getElementById('output');
+			el.value = '';
+	
+			assembler.setInput(getSource());
+			
+			assembler.assemble();
+
+			
+		}
+	</script>
+</head>
+<body>
+<div style="width:700px; float:left; clear:none;">
+<p>Input</p>
+	<textarea id="code" rows="20" cols="80"></textarea>
+	<br/>
+	<button id="assemble" onclick="ass()">Assemble</button>
+	<p>Output</p>
+	<textarea id="output" rows="20" cols="80"></textarea>
+</div>
+
+
+</body>
+</html>
