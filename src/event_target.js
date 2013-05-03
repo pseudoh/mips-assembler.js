@@ -14,6 +14,7 @@ EventTarget.prototype = {
             this._listeners[type] = [];
         }
 
+
         this._listeners[type].push(listener);
     },
 

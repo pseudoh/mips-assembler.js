@@ -43,6 +43,7 @@ var opcode_translator = {
 			   "blez"     : [INSTRUCTION_CODE.iType, 0x06, [INSTRUCTION_FIELD.ifRS, INSTRUCTION_FIELD.ifLabel], 0],
 			   "bltz"     : [INSTRUCTION_CODE.iType, 0x01, [INSTRUCTION_FIELD.ifRS, INSTRUCTION_FIELD.ifLabel], 0],
 			   "bne"      : [INSTRUCTION_CODE.iType, 0x05, [INSTRUCTION_FIELD.ifRS, INSTRUCTION_FIELD.ifRT, INSTRUCTION_FIELD.ifLabel]],
+			   "la"       : [INSTRUCTION_CODE.iType, 0x20, [INSTRUCTION_FIELD.ifRT, INSTRUCTION_FIELD.ifLabel]],
 			   "lb"       : [INSTRUCTION_CODE.iType, 0x20, [INSTRUCTION_FIELD.ifRT, INSTRUCTION_FIELD.ifImmediatePointer]],
 			   "lbu"      : [INSTRUCTION_CODE.iType, 0x24, [INSTRUCTION_FIELD.ifRT, INSTRUCTION_FIELD.ifImmediatePointer]],
 			   "lh"       : [INSTRUCTION_CODE.iType, 0x21, [INSTRUCTION_FIELD.ifRT, INSTRUCTION_FIELD.ifImmediatePointer]],

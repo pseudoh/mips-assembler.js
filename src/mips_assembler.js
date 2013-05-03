@@ -47,7 +47,7 @@ MIPS_Assembler.prototype.assemble = function() {
 		this.parser.parse();
 		console.timeEnd('Second Pass');
 	} catch (e) {
-		console.log(e.message);
+		console.log(e.token.cr.line+":"+e.token.cr.col+" - "+e.message);
 	} finally {
 		this.init(); //reset
 	}
@@ -126,6 +126,10 @@ MIPS_Assembler.prototype._rebuildInstruction = function(args) {
 		switch (token.type) {
 			case TOKENS.tkRegister:
 				var operand = '$'+token.value;
+
+			break;
+			case TOKENS.tkPointer:
+				var operand = token.offset.value+"($"+token.pointer.value+")";
 			break;
 			default:
 				var operand = token.value;
@@ -162,15 +166,63 @@ MIPS_Assembler.prototype.initEvents = function() {
 	if (this.pass == 1) {
 		eh.addListener('label', function(label) {
 			self.addSymbol(label);
+			self.incrementLC(0x4);
 		});
+
 		eh.addListener('opcode', function(args) {
 			self._pushIntermediate(self._rebuildInstruction(args));
 			self.incrementLC(0x4);
 		});	
-	}  else {
 
 		eh.addListener('datadef', function(args) {
+			//var charArray = args.value[0].match(/.{1,4}/g); //split into 4 characters (4 bytes)
+			
+			//parse text
+			// TODO: asciiz null terminator
+			if (args.type == "asciiz") {
+					var byteCount = 0;
+					var data = [];
+					var text = args.value[0];
+					var EOF = false;
+					var charIndex = 0;
+
+					while (!EOF) {
+						if (charIndex >= text.length)
+							EOF = true;
+
+						chrs = text.substr(charIndex, 4);
+
+						chr = "";
+
+						charIndex += 4;
+
+
+						var escapeCount = 0;
+						for (var i = 0; i < chrs.length; i++) {
+							if (chrs[i] == '\\') {
+								chr = chrs[i]+chrs[i+1];
+								i++;
+								escapeCount++;
+							} else {
+								chr += chrs[i];
+							}
+						}
+						
+						for (var i = 0; i < escapeCount; i++) {
+							chr += text[charIndex++];
+						}
+
+						if (chr != "")
+							data.push(chr);
+
+						
+					}
+
+			}
 		});
+	}  else {
+
+
 
 		eh.addListener('opcode', function(args) {
 			var binArray = [];

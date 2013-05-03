@@ -20,7 +20,8 @@ var TOKENS = {
 	tkSpace: 15,
 	tkTab: 16,
 	tkNewLine: 17,
-	tkWhitespace: 18
+	tkWhitespace: 18,
+	tkPointer: 19
 };
 
 
@@ -91,13 +92,13 @@ var DATATYPES = {
 	"ascii"  : [[DATATYPES_VALUES.dtString], 0],
 	"asciiz" : [[DATATYPES_VALUES.dtString], 0],
 	"byte"   : [[DATATYPES_VALUES.dtByte], 0],
-	"double" : [[DATATYPES_VALUES.dtDouble], 0],
-	"extern" : [[DATATYPES_VALUES.dtSymbol, DATATYPES_VALUES.dtByte], 2],
-	"float"  : [[DATATYPES_VALUES.dtFloat], 0],
-	"globl"  : [[DATATYPES_VALUES.dtSymbol], 1],
-	"half"   : [[DATATYPES_VALUES.dtHalfWord], 0],
-	"word"   : [[DATATYPES_VALUES.dtWord], 0],
-	"space"  : [[DATATYPES_VALUES.dtByte], 1]
+	"double": [[DATATYPES_VALUES.dtDouble], 0],
+	"extern": [[DATATYPES_VALUES.dtSymbol, DATATYPES_VALUES.dtByte], 2],
+	"float" : [[DATATYPES_VALUES.dtFloat], 0],
+	"glob"  : [[DATATYPES_VALUES.dtSymbol], 1],
+	"half"  : [[DATATYPES_VALUES.dtHalfWord], 0],
+	"word"  : [[DATATYPES_VALUES.dtWord], 0],
+	"space" : [[DATATYPES_VALUES.dtByte], 1]
 }
 
 var PROGRAM_START_ADDRESS = 0x00400000;

@@ -32,6 +32,8 @@ MIPS_Lexer.prototype.isReady = function() {
 MIPS_Lexer.prototype.nextToken = function() {
 	var self = this;
 	var chr = '';
+
+
     
 	function nextChar() {
 		var scan = self.scanner.readChar();
@@ -75,12 +77,14 @@ MIPS_Lexer.prototype.nextToken = function() {
 
 	//Scan for registers
 	if (isRegisterStartChar(chr)) {
+
 		nextChar();
 		var tokenVal = '';
 		while (isRegisterChar(chr)) {
 			tokenVal += chr;
 			nextChar();
 		}
+		
 		prevChar(); //Go back one character
 		return this.newToken(TOKENS.tkRegister, tokenVal);
 	}

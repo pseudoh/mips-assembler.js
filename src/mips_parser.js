@@ -8,6 +8,7 @@ function MIPS_Parser() {
 
 MIPS_Parser.prototype.init = function() {
 	this.token = null;
+	this.prevToken = null;
 	this.currentSection = SECTIONS.text;	
 }
 
@@ -47,6 +48,8 @@ MIPS_Parser.prototype.assemble = function(type, args) {
 
 MIPS_Parser.prototype.consume = function(expectedToken) {
 
+	this.prevToken = {type: this.token.type, value: this.token.value, cr: this.token.cr}; //A dirty object-cloning solution (or is it?)
+	
 	if (typeof expectedToken !== "undefined") {
 		if (this.expect(expectedToken)) {
 			this.nextToken();
@@ -54,6 +57,7 @@ MIPS_Parser.prototype.consume = function(expectedToken) {
 	} else {
 		this.nextToken();
 	}
+
 }
 
 
@@ -79,6 +83,7 @@ MIPS_Parser.prototype.statement = function() {
 	var self = this;
 	switch (this.getTokenType()) {
 		case TOKENS.tkDirective:
+
 			this.directiveStatement();
 		break;
 		case TOKENS.tkLabel: 
@@ -110,11 +115,7 @@ MIPS_Parser.prototype.parse = function() {
 
 		}
 	} catch (e) {
-	//	var cr = e.token.cr;
-		var err = new Error();
-		err.name = "";
-		err.message = e.message;//+" at line "+cr.line+" and column "+cr.col;
-		throw (err);
+		throw (e);
 	}
 
 }
@@ -137,22 +138,31 @@ MIPS_Parser.prototype.labelStatement = function() {
 MIPS_Parser.prototype.directiveStatement = function() {
 
 		var dir = this.getTokenValue();
+		var prevToken = this.prevToken;
 		this.consume(TOKENS.tkDirective);
 
 		if (isSection(dir)) {
-
+			
 			this.currentSection = SECTIONS[dir];
-
+			
 			var location = this.parseDtValue(dir, true);
 			this.assemble('section', {section: dir, location:location});
 
 		} else if (isDatatype(dir)) {
+			
+			if (this.currentSection === SECTIONS.data) {
 
-			if (this.currentSection.name == 'data') {
-				var val = this.parseDtValue(dir);
-				this.assemble('datadef', {type: dir, value:val});
+				//Check if labels has been assigned
+				if (prevToken.type == TOKENS.tkLabel) {
+					var val = this.parseDtValue(dir);
+					this.assemble('datadef', {type: dir, value:val});
+				} else {
+					this.parseError("Label hasn't been assigned");
+				}
+
+			
 			} else {
-				this.parseError(dir+" directive cannot appear in "+SECTIONS[this.currentSection]+" segment");
+				this.parseError(dir+" directive cannot appear in "+this.currentSection.name+" segment");
 			} 
 
 		} else {
@@ -338,6 +348,8 @@ MIPS_Parser.prototype.iInstructionStatement = function(opcode) {
 
 			var fieldType = instruction[2][fieldIndex];
 
+
+
 			if ((fieldType == INSTRUCTION_FIELD.ifRT) || (fieldType == INSTRUCTION_FIELD.ifRS)) {
 
 				if (this.expect(TOKENS.tkRegister)) {
@@ -376,15 +388,15 @@ MIPS_Parser.prototype.iInstructionStatement = function(opcode) {
 				}
 
 			} else if(fieldType == INSTRUCTION_FIELD.ifImmediatePointer) {
-				
-					var operandVal = {offset: {}, pointer: {}};
-
+					
+					var operandVal = {type: TOKENS.tkPointer, offset: {}, pointer: {}};
+					
 					if (this.expect(TOKENS.tkNumber) || this.expect(TOKENS.tkSymbol)) {
 						operandVal.offset = this.getToken();
 						this.consume();
 					}
 
-			
+
 				
 					if (this.expect(TOKENS.tkPointerStart)) {
 						this.consume(TOKENS.tkPointerStart);
