@@ -1,5 +1,12 @@
+var OUTPUT_TYPE = {HEX: 0, BIN: 1};
+
 function MIPS_Assembler() {
 	this.init();
+	this.outputType = OUTPUT_TYPE.HEX;
+}
+
+MIPS_Assembler.prototype.setOutputType = function(type) {
+	this.outputType = type;
 }
 
 MIPS_Assembler.prototype.init = function(secondPass) {
@@ -28,8 +35,6 @@ MIPS_Assembler.prototype.setError = function(errCode, errMsg) {
 }
 
 MIPS_Assembler.prototype.assemble = function() {
-
-	
 
 	try {
 		console.time('First Pass');
@@ -174,7 +179,6 @@ MIPS_Assembler.prototype.initEvents = function() {
 				binArray.push(decToBin(val, nBits));
 			}
 
-			console.log(args);
 			function getRawOperands(operands) {
 
 				var rs = 0x00;
@@ -203,7 +207,7 @@ MIPS_Assembler.prototype.initEvents = function() {
 							label = (operand / 4) & 0x03ffffff;
 						break;		
 						case INSTRUCTION_FIELD.ifImmediate:
-							immediate = (operand / 4) & 0x03ffffff;
+							immediate = operand;
 						break;		
 
 					}							
@@ -230,7 +234,7 @@ MIPS_Assembler.prototype.initEvents = function() {
 					pushBin(inst[1], 6); //opcode
 					pushBin(operands.rs, 5); //rs
 					pushBin(operands.rt, 5); //rt
-					pushBin(inst[3], 16); //value
+					pushBin(operands.immediate, 16); //value
 				break;				
 				case INSTRUCTION_CODE.jType:
 					pushBin(inst[1], 6); //opcode
@@ -238,7 +242,13 @@ MIPS_Assembler.prototype.initEvents = function() {
 				break;		
 			}
 
-			write_out((binArray.join('')));
+			if (self.outputType == OUTPUT_TYPE.HEX) {
+				write_out(binToHex(binArray.join('')));
+			} else {
+				write_out(binArray.join(''));
+			}
+			
+
 
 
 			self.incrementLC(binArray);

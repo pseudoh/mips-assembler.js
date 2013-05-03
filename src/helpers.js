@@ -90,11 +90,6 @@ function getDirectiveDT(dir) {
 	return DATATYPES[dir][0];
 }
 
-
-
-
-
-
 function decToBin(val, nBits) {
 
 	 var res = (parseInt(val)).toString(2);
@@ -120,12 +115,11 @@ function binToDec(val) {
 	return res;
 }
 
-function binToHex(val) {
-	var res = '';
-	for (var i = 0; i < val.length; i = i + 4) {
-		var fbits = val.substr(i, 4);
-		res = res+parseInt(binToDec(fbits)).toString(16);
-	}
-
-	return res;
+function binToHex(s) {
+	  var binArray = s.match(/.{1,4}/g);
+      var result = '';
+	  for (var i = 0; i < binArray.length; i++) {
+	  	result += parseInt(binArray[i], 2).toString(16);
+	  }
+	  return result;
 }
