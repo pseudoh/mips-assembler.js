@@ -44,8 +44,6 @@ MIPS_Parser.prototype.assemble = function(type, args) {
 	this.events.fire(type, args);
 }
 
-
-
 MIPS_Parser.prototype.consume = function(expectedToken) {
 
 	this.prevToken = {type: this.token.type, value: this.token.value, cr: this.token.cr}; //A dirty object-cloning solution (or is it?)
@@ -59,7 +57,6 @@ MIPS_Parser.prototype.consume = function(expectedToken) {
 	}
 
 }
-
 
 MIPS_Parser.prototype.expect = function(expectedToken, token2, errorMsg) {
 
@@ -77,7 +74,6 @@ MIPS_Parser.prototype.expect = function(expectedToken, token2, errorMsg) {
 	}
 
 }
-
 
 MIPS_Parser.prototype.statement = function() {
 	var self = this;
@@ -120,7 +116,6 @@ MIPS_Parser.prototype.parse = function() {
 
 }
 
-
 MIPS_Parser.prototype.labelStatement = function() {
 	var label = this.getTokenValue();
 	this.assemble('label', label);
@@ -133,7 +128,6 @@ MIPS_Parser.prototype.labelStatement = function() {
 	}*/
 	
 }
-
 
 MIPS_Parser.prototype.directiveStatement = function() {
 
@@ -287,9 +281,6 @@ MIPS_Parser.prototype._validRegister = function(register) {
 		this.parseError("invalid register specified ");
 	}
 }
-
-
-
 
 MIPS_Parser.prototype.rInstructionStatement = function(opcode) {
 	var instruction = opcode_translator.translate(opcode);

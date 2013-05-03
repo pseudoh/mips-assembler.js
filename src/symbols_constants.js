@@ -95,7 +95,7 @@ var DATATYPES = {
 	"double": [[DATATYPES_VALUES.dtDouble], 0],
 	"extern": [[DATATYPES_VALUES.dtSymbol, DATATYPES_VALUES.dtByte], 2],
 	"float" : [[DATATYPES_VALUES.dtFloat], 0],
-	"glob"  : [[DATATYPES_VALUES.dtSymbol], 1],
+	"globl"  : [[DATATYPES_VALUES.dtSymbol], 1],
 	"half"  : [[DATATYPES_VALUES.dtHalfWord], 0],
 	"word"  : [[DATATYPES_VALUES.dtWord], 0],
 	"space" : [[DATATYPES_VALUES.dtByte], 1]

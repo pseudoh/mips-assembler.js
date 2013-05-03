@@ -33,8 +33,6 @@ MIPS_Lexer.prototype.nextToken = function() {
 	var self = this;
 	var chr = '';
 
-
-    
 	function nextChar() {
 		var scan = self.scanner.readChar();
 		self.cr = {line: scan.lineNum, col: scan.colNum};
@@ -43,7 +41,6 @@ MIPS_Lexer.prototype.nextToken = function() {
 	function prevChar() {
 		var scan = self.scanner.prevChar();
 	}
-
 
 	nextChar();
 
@@ -74,7 +71,6 @@ MIPS_Lexer.prototype.nextToken = function() {
 		return this.newToken(TOKENS.tkOpSeperator);
 	}
 
-
 	//Scan for registers
 	if (isRegisterStartChar(chr)) {
 
@@ -88,7 +84,6 @@ MIPS_Lexer.prototype.nextToken = function() {
 		prevChar(); //Go back one character
 		return this.newToken(TOKENS.tkRegister, tokenVal);
 	}
-
 
 	//Scan for directives
 	if (isDirectiveChar(chr)) {
@@ -184,7 +179,5 @@ MIPS_Lexer.prototype.nextToken = function() {
 
 
 	return  this.newToken(TOKENS.tkUnknown, tokenVal);
-
-
 
 }

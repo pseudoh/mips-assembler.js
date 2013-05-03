@@ -26,7 +26,7 @@ SymbolTable.prototype.getAddress = function(symbol) {
 }
 
 SymbolTable.prototype.exists = function(symbol) {
-	return typeof this.entries !== "undefined";
+	return typeof this.entries[symbol] !== "undefined";
 }
 
 SymbolTable.prototype.toString = function(delimiter) {

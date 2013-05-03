@@ -29,6 +29,15 @@ MIPS_Assembler.prototype.init = function(secondPass) {
 	this.initEvents();
 }
 
+MIPS_Assembler.prototype.assembleError = function(error) {
+
+	var err = new Error();
+	err.name = "AssemblyError";
+	err.message = error;
+	err.token = this.parser.token;
+	
+	throw (err);
+}
 
 MIPS_Assembler.prototype.setError = function(errCode, errMsg) {
 	this.lastError = {codae: errCode, msg: errMsg};
@@ -54,7 +63,6 @@ MIPS_Assembler.prototype.assemble = function() {
 
 	
 }
-
 
 MIPS_Assembler.prototype.setInput = function(input) {
 	this.parser.setInput(input);
@@ -102,7 +110,6 @@ MIPS_Assembler.prototype._pushIntermediate = function(line) {
 	this.intermediate.push(line+"\n ");
 }
 
-
 MIPS_Assembler.prototype._translateOperand = function(token) {
 	switch (token.type) {
 		case TOKENS.tkRegister:
@@ -112,6 +119,9 @@ MIPS_Assembler.prototype._translateOperand = function(token) {
 			return token.value;
 		break;	
 		case TOKENS.tkSymbol:
+			if (!this.symbolTable.exists(token.value)) {
+				this.assembleError("Label \""+token.value+"\" not in symbol table");
+			}
 			return parseInt('0x'+this.symbolTable.getAddress(token.value));
 		break;					
 	}
@@ -146,9 +156,7 @@ MIPS_Assembler.prototype._rebuildInstruction = function(args) {
 	return instruction+' '+operands;
 }
 
-
 //Events Handlers
-
 MIPS_Assembler.prototype.initEvents = function() {
 
 	var self = this;
@@ -221,8 +229,6 @@ MIPS_Assembler.prototype.initEvents = function() {
 			}
 		});
 	}  else {
-
-
 
 		eh.addListener('opcode', function(args) {
 			var binArray = [];
@@ -306,8 +312,5 @@ MIPS_Assembler.prototype.initEvents = function() {
 			self.incrementLC(binArray);
 		});
 	}
-
-
-	
 
 }
