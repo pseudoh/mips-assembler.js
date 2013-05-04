@@ -96,7 +96,9 @@ var DATATYPES_VALUES = {
 };
 
 
-// Datatype : [type: [array of datatype_values], length: number of arguments allowed (0 is infinite), labeled: true/false whether a label is required]
+/* Datatype : [type: [array of datatype_values], length: number of arguments allowed (0 is infinite), 
+   labeled: true/false whether a label is required]
+*/
 var DATATYPES = {
 	"align"   : {types: [DATATYPES_VALUES.dtHex],      length: 1, labeled: true},
 	"ascii"   : {types: [DATATYPES_VALUES.dtString],   length: 1, labeled: true},
@@ -104,7 +106,7 @@ var DATATYPES = {
 	"byte"    : {types: [DATATYPES_VALUES.dtByte],     length: 0, labeled: true},
 	"double"  : {types: [DATATYPES_VALUES.dtDouble],   length: 0, labeled: true},
 	"float"   : {types: [DATATYPES_VALUES.dtFloat],    length: 0, labeled: true},
-	"global"  : {types: [DATATYPES_VALUES.dtSymbol],   length: 1, labeled: false},
+	"globl"  : {types: [DATATYPES_VALUES.dtSymbol],    length: 1, labeled: false},
 	"half"    : {types: [DATATYPES_VALUES.dtHalfWord], length: 0, labeled: true},
 	"word"    : {types: [DATATYPES_VALUES.dtWord],     length: 0, labeled: true},
 	"space"   : {types: [DATATYPES_VALUES.dtByte],     length: 1, labeled: true},
