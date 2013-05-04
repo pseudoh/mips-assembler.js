@@ -1,1 +1,5 @@
 An (experimental) assembler for the MIPS architecture written in JavaScript. This project is part 1 of a MIPS emulator that will also be written in JavaScript. 
+
+Try the latest demo here
+
+<a href="http://sandbox.pseudoh.com/mips-assembler.js/test/frontend.html">http://sandbox.pseudoh.com/mips-assembler.js/test/frontend.html</a>
