@@ -147,7 +147,8 @@ MIPS_Parser.prototype.directiveStatement = function() {
 			if (this.currentSection === SECTIONS.data) {
 
 				//Check if labels has been assigned
-				if (prevToken.type == TOKENS.tkLabel) {
+
+				if (!isLabeledDirective(dir) || prevToken.type == TOKENS.tkLabel) {
 					var val = this.parseDtValue(dir);
 					this.assemble('datadef', {type: dir, value:val});
 				} else {
@@ -178,6 +179,12 @@ MIPS_Parser.prototype.parseDtValue = function(dir, isSection) {
 			case DATATYPES_VALUES.dtString:
 				return self.expect(TOKENS.tkString);
 			break;
+			case DATATYPES_VALUES.dtHex:
+				return self.expect(TOKENS.tkHex);
+			break;
+			case DATATYPES_VALUES.dtSymbol:
+				return self.expect(TOKENS.tkSymbol);
+			break;
 		}
 
 		return false;
@@ -194,7 +201,6 @@ MIPS_Parser.prototype.parseDtValue = function(dir, isSection) {
 		var valCount = getDirectiveDTLength(dir);
 		var valTypes = getDirectiveDT(dir);
 		var val = [];
-
 		if (valCount == 0) {
 			var valType = valTypes[0];
 			while (!this.expect(TOKENS.tkNewLine) && !this.expect(TOKENS.tkEnd)) {

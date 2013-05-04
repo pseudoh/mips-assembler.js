@@ -83,11 +83,15 @@ function isHex(chr) {
 }
 
 function getDirectiveDTLength(dir) {
-	return DATATYPES[dir][1];
+	return DATATYPES[dir].length;
 }
 
 function getDirectiveDT(dir) {
-	return DATATYPES[dir][0];
+	return DATATYPES[dir].types;
+}
+
+function isLabeledDirective(dir) {
+	return DATATYPES[dir].labeled;
 }
 
 function decToBin(val, nBits) {
@@ -123,3 +127,11 @@ function binToHex(s) {
 	  }
 	  return result;
 }
+
+ function asciiToHex(ascii) {
+        var result = '';
+        for (var i = 0; i < ascii.length; i++) {
+            result = result + ascii.charCodeAt(i).toString(16);
+        }
+        return result;
+    }

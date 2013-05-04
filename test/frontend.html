@@ -15,6 +15,29 @@
 
 		var assembler = new MIPS_Assembler();
 
+		assembler.events.addListener("done", function(output) {
+			var segments = output.segments;
+			
+			//Text Segment
+			if (typeof segments.text !== "undefined") {
+				var text = segments.text;
+				var textTable = document.getElementById('textSegRows');
+				for (var i = 0; i < text.length; i++) {
+					var row = text[i];
+					textTable.innerHTML += "<tr><td>0x"+row.address+"</td><td>0x"+row.code+"</td></tr>"
+				}
+			}
+
+			//Data Segment
+			if (typeof segments.text !== "undefined") {
+				var data = segments.data;
+				var dataTable = document.getElementById('dataSegRows');
+				for (var i = 0; i < data.length; i++) {
+					var row = data[i];
+					dataTable.innerHTML += "<tr><td>0x"+row.address+"</td><td>0x"+row.code+"</td></tr>"
+				}
+			}
+		});	
 
 		function getSource() {
 			var value = document.getElementById('code').value;
@@ -23,16 +46,15 @@
 			return sourceArray.join("\n ")+"\n";
 		}
 
-		function write_out(str) {
-			var el = document.getElementById('output');
-			el.value += str+"\n";
+		function reset() {
+			document.getElementById('textSegRows').innerHTML = "";
+			document.getElementById('dataSegRows').innerHTML = "";
 		}
 
-		function ass() {
+		function assemble() {
+			
+			reset();
 
-			var el = document.getElementById('output');
-			el.value = '';
-	
 			assembler.setInput(getSource());
 			
 			assembler.assemble();
@@ -52,9 +74,33 @@ syscall
 .data
 prompt: .asciiz "\n Please Input a Value: "</textarea>
 	<br/>
-	<button id="assemble" onclick="ass()">Assemble</button>
+	<button id="assemble" onclick="assemble()">Assemble</button>
 	<p>Output</p>
-	<textarea id="output" rows="20" cols="80"></textarea>
+	<table border="1">
+		<caption>Text Segment</caption>
+		<thead>
+			<tr>
+				<td>Address</td>
+				<td>Code</td>
+			</tr>
+		</thead>
+		<tbody id="textSegRows">
+
+		</tbody>
+	</table>		
+
+	<table border="1">
+		<caption>Data Segment</caption>
+		<thead>
+			<tr>
+				<td>Address</td>
+				<td>Code</td>
+			</tr>
+		</thead>
+		<tbody id="dataSegRows">
+
+		</tbody>
+	</table>		
 </div>
 
 

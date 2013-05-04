@@ -64,6 +64,7 @@ var opcode_translator = {
 			   "j"        : [INSTRUCTION_CODE.jType, 0x02, [INSTRUCTION_FIELD.ifLabel]],
 			   "jal"      : [INSTRUCTION_CODE.jType, 0x03, [INSTRUCTION_FIELD.ifLabel]]
 			   //Coprocessor Instructions
+
 			   
 			},
 

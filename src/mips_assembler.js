@@ -3,6 +3,7 @@ var OUTPUT_TYPE = {HEX: 0, BIN: 1};
 function MIPS_Assembler() {
 	this.init();
 	this.outputType = OUTPUT_TYPE.HEX;
+	this.events = new EventTarget();
 }
 
 MIPS_Assembler.prototype.setOutputType = function(type) {
@@ -15,11 +16,11 @@ MIPS_Assembler.prototype.init = function(secondPass) {
 	this.sections = {};
 	this.currentSection;
 
-
 	if ((typeof secondPass == 'undefined') && !secondPass) {
 		this.pass = 1;
 		this.symbolTable = new SymbolTable();
 		this.intermediate = [];
+		this.output = {};
 	} else {
 		this.pass = 2;
 	}
@@ -55,6 +56,10 @@ MIPS_Assembler.prototype.assemble = function() {
 		console.time('Second Pass');
 		this.parser.parse();
 		console.timeEnd('Second Pass');
+
+		//Fire finish event
+		this.events.fire("done", {segments: this.output});
+
 	} catch (e) {
 		console.log(e.token.cr.line+":"+e.token.cr.col+" - "+e.message);
 	} finally {
@@ -62,6 +67,17 @@ MIPS_Assembler.prototype.assemble = function() {
 	}
 
 	
+}
+
+MIPS_Assembler.prototype.pushOutput = function(value) {
+	if (typeof this.output[this.currentSection.name] == 'undefined') {
+		this.output[this.currentSection.name] = [];
+	}
+	this.output[this.currentSection.name].push({address: this.getLC(), code: value});
+}
+
+MIPS_Assembler.prototype.getOutput = function() {
+	return this.output;
 }
 
 MIPS_Assembler.prototype.setInput = function(input) {
@@ -87,7 +103,7 @@ MIPS_Assembler.prototype.changeSection = function(section) {
 
 MIPS_Assembler.prototype.incrementLC = function(val) {
 	if (typeof val == 'undefined') {
-		var val = 4;
+		var val = 0x4;
 	}
 
 	this.currentSection.lc += val;
@@ -97,7 +113,7 @@ MIPS_Assembler.prototype.setLC = function(val) {
 	this.currentSection.lc = parseInt(val);
 }
 
-MIPS_Assembler.prototype.getLC = function(val) {
+MIPS_Assembler.prototype.getLC = function() {
 	return this.currentSection.lc.toString(16);
 }
 
@@ -174,22 +190,17 @@ MIPS_Assembler.prototype.initEvents = function() {
 	if (this.pass == 1) {
 		eh.addListener('label', function(label) {
 			self.addSymbol(label);
-			self.incrementLC(0x4);
 		});
 
 		eh.addListener('opcode', function(args) {
 			self._pushIntermediate(self._rebuildInstruction(args));
-			self.incrementLC(0x4);
 		});	
 
 		eh.addListener('datadef', function(args) {
-			//var charArray = args.value[0].match(/.{1,4}/g); //split into 4 characters (4 bytes)
-			
 			//parse text
 			// TODO: asciiz null terminator
 			if (args.type == "asciiz") {
 					var byteCount = 0;
-					var data = [];
 					var text = args.value[0];
 					var EOF = false;
 					var charIndex = 0;
@@ -208,11 +219,11 @@ MIPS_Assembler.prototype.initEvents = function() {
 						var escapeCount = 0;
 						for (var i = 0; i < chrs.length; i++) {
 							if (chrs[i] == '\\') {
-								chr = chrs[i]+chrs[i+1];
+								chr = chrs[i+1]+chrs[i];
 								i++;
 								escapeCount++;
 							} else {
-								chr += chrs[i];
+								chr = chrs[i]+chr;
 							}
 						}
 						
@@ -221,12 +232,13 @@ MIPS_Assembler.prototype.initEvents = function() {
 						}
 
 						if (chr != "")
-							data.push(chr);
-
+							self.pushOutput(asciiToHex(chr));
 						
 					}
-
 			}
+
+			
+
 		});
 	}  else {
 
@@ -300,16 +312,15 @@ MIPS_Assembler.prototype.initEvents = function() {
 				break;		
 			}
 
+
 			if (self.outputType == OUTPUT_TYPE.HEX) {
-				write_out(binToHex(binArray.join('')));
+				self.pushOutput(binToHex(binArray.join('')));
 			} else {
-				write_out(binArray.join(''));
+				self.pushOutput(binArray.join(''));
 			}
 			
 
-
-
-			self.incrementLC(binArray);
+			self.incrementLC(0x4);
 		});
 	}
 

@@ -14,7 +14,6 @@ EventTarget.prototype = {
             this._listeners[type] = [];
         }
 
-
         this._listeners[type].push(listener);
     },
 
@@ -31,11 +30,13 @@ EventTarget.prototype = {
         }
 
         if (this._listeners[event.type] instanceof Array){
+
             var listeners = this._listeners[event.type];
             for (var i=0, len=listeners.length; i < len; i++){
                 listeners[i].call(this, args);
             }
         }
+
     },
 
     removeListener: function(type, listener){

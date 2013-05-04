@@ -24,7 +24,6 @@ var TOKENS = {
 	tkPointer: 19
 };
 
-
 COMMENT = "#";
 WHITESPACE = " \t";
 EOF = 'EOF';
@@ -83,34 +82,47 @@ var REGISTER_SET = {
 }
 
 
-// Directive_name : [arg_count, [type]]
 
-var DATATYPES_VALUES = {dtString: 0, dtNumberHex: 1, dtDouble: 3, dtFloat: 4, dtByte: 5, dtHalfWord: 6, dtWord: 7, dtSymbol: 8};
 
+var DATATYPES_VALUES = {
+	dtString: 0, 
+	dtHex: 1, 
+	dtDouble: 3, 
+	dtFloat: 4, 
+	dtByte: 5, 
+	dtHalfWord: 6, 
+	dtWord: 7, 
+	dtSymbol: 8
+};
+
+
+// Datatype : [type: [array of datatype_values], length: number of arguments allowed (0 is infinite), labeled: true/false whether a label is required]
 var DATATYPES = {
-	"align"  : [[DATATYPES_VALUES.dtNumberHex], 1],
-	"ascii"  : [[DATATYPES_VALUES.dtString], 0],
-	"asciiz" : [[DATATYPES_VALUES.dtString], 0],
-	"byte"   : [[DATATYPES_VALUES.dtByte], 0],
-	"double": [[DATATYPES_VALUES.dtDouble], 0],
-	"extern": [[DATATYPES_VALUES.dtSymbol, DATATYPES_VALUES.dtByte], 2],
-	"float" : [[DATATYPES_VALUES.dtFloat], 0],
-	"globl"  : [[DATATYPES_VALUES.dtSymbol], 1],
-	"half"  : [[DATATYPES_VALUES.dtHalfWord], 0],
-	"word"  : [[DATATYPES_VALUES.dtWord], 0],
-	"space" : [[DATATYPES_VALUES.dtByte], 1]
+	"align"   : {types: [DATATYPES_VALUES.dtHex],      length: 1, labeled: true},
+	"ascii"   : {types: [DATATYPES_VALUES.dtString],   length: 1, labeled: true},
+	"asciiz"  : {types: [DATATYPES_VALUES.dtString],   length: 1, labeled: true},
+	"byte"    : {types: [DATATYPES_VALUES.dtByte],     length: 0, labeled: true},
+	"double"  : {types: [DATATYPES_VALUES.dtDouble],   length: 0, labeled: true},
+	"float"   : {types: [DATATYPES_VALUES.dtFloat],    length: 0, labeled: true},
+	"global"  : {types: [DATATYPES_VALUES.dtSymbol],   length: 1, labeled: false},
+	"half"    : {types: [DATATYPES_VALUES.dtHalfWord], length: 0, labeled: true},
+	"word"    : {types: [DATATYPES_VALUES.dtWord],     length: 0, labeled: true},
+	"space"   : {types: [DATATYPES_VALUES.dtByte],     length: 1, labeled: true},
+	"extern"  : {types: [DATATYPES_VALUES.dtSymbol, DATATYPES_VALUES.dtByte], length: 2, labeled: true}
 }
 
-var PROGRAM_START_ADDRESS = 0x00400000;
-
 var SECTIONS = {
-	text: {name: 'text', address: PROGRAM_START_ADDRESS},
-//	rdata: "rdata",
-	data: {name: 'data', address: 0x10010000},
-//	lit8: "lit8",
-//	lit4: "lit4",
-//	sdata: "sdata",
-//	sbss: "sbss",
-//	bss: "bss"
+	text   : {name: '.text',   address: 0x00400000},
+	data   : {name: '.data',   address: 0x10010000},
+	extern : {name: '.extern', address: 0x10000000},
+	heap   : {name: 'heap',    address: 0x10040000},
+	kdata  : {name: '.kdata',  address: 0x90000000},
+	mmio   : {name: 'MMIO',    address: 0xffff0000}
+	//	rdata: "rdata",
+	//	lit8: "lit8",
+	//	lit4: "lit4",
+	//	sdata: "sdata",
+	//	sbss: "sbss",
+	//	bss: "bss"
 }
 
