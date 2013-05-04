@@ -2,4 +2,4 @@ An (experimental) assembler for the MIPS architecture written in JavaScript. Thi
 
 Try the latest demo here
 
-<a href="http://sandbox.pseudoh.com/mips-assembler.js/test/frontend.html">http://sandbox.pseudoh.com/mips-assembler.js/test/frontend.html</a>
+http://sandbox.pseudoh.com/mips-assembler.js/test/frontend.html
