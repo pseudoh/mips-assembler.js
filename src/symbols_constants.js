@@ -112,11 +112,11 @@ var DATATYPES = {
 }
 
 var SECTIONS = {
-	text   : {name: '.text',   address: 0x00400000},
-	data   : {name: '.data',   address: 0x10010000},
-	extern : {name: '.extern', address: 0x10000000},
+	text   : {name: 'text',   address: 0x00400000},
+	data   : {name: 'data',   address: 0x10010000},
+	extern : {name: 'extern', address: 0x10000000},
 	heap   : {name: 'heap',    address: 0x10040000},
-	kdata  : {name: '.kdata',  address: 0x90000000},
+	kdata  : {name: 'kdata',  address: 0x90000000},
 	mmio   : {name: 'MMIO',    address: 0xffff0000}
 	//	rdata: "rdata",
 	//	lit8: "lit8",
