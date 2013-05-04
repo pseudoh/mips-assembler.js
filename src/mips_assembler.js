@@ -1,3 +1,7 @@
+/**
+** TODO: some data definition keywords may be used in multiple segements not just in data (e.g. globl)
+**/
+
 var OUTPUT_TYPE = {HEX: 0, BIN: 1};
 
 function MIPS_Assembler() {
@@ -231,8 +235,10 @@ MIPS_Assembler.prototype.initEvents = function() {
 							chr += text[charIndex++];
 						}
 
-						if (chr != "")
+						if (chr != "") {
 							self.pushOutput(asciiToHex(chr));
+							self.incrementLC(0x4);
+						}
 						
 					}
 			}
